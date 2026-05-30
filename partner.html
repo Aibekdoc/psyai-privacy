@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSY AI — Партнёрская программа</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0A0A0F; color: #fff; font-family: -apple-system, sans-serif; min-height: 100vh; }
+  .container { max-width: 480px; margin: 0 auto; padding: 40px 20px; }
+  .logo { text-align: center; margin-bottom: 40px; }
+  .logo h1 { font-size: 28px; font-weight: 200; letter-spacing: 6px; color: #C8924A; }
+  .logo p { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 2px; margin-top: 8px; text-transform: uppercase; }
+  .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+  .card h2 { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .stat { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .stat:last-child { border-bottom: none; }
+  .stat-label { font-size: 14px; color: rgba(255,255,255,0.5); }
+  .stat-value { font-size: 20px; font-weight: 300; color: #fff; }
+  .stat-value.gold { color: #C8924A; }
+  .stat-value.green { color: #7B9E87; }
+  .input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; color: #fff; font-size: 16px; outline: none; margin-bottom: 12px; }
+  .input::placeholder { color: rgba(255,255,255,0.25); }
+  .btn { width: 100%; background: #7B9E87; border: none; border-radius: 14px; padding: 16px; color: #fff; font-size: 16px; cursor: pointer; letter-spacing: 1px; }
+  .btn:hover { background: #6a8d76; }
+  .btn-gold { background: rgba(200,146,74,0.2); border: 1px solid rgba(200,146,74,0.3); color: #C8924A; }
+  .promo-code { font-size: 32px; font-weight: 200; letter-spacing: 8px; color: #C8924A; text-align: center; padding: 20px; }
+  .payments { max-height: 300px; overflow-y: auto; }
+  .payment-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+  .error { color: #E24B4A; font-size: 13px; text-align: center; margin-top: 8px; }
+  .success { color: #7B9E87; font-size: 13px; text-align: center; margin-top: 8px; }
+  #login-screen, #dashboard-screen { display: none; }
+  .loading { text-align: center; color: rgba(255,255,255,0.3); padding: 40px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <h1>PSY AI</h1>
+    <p>Партнёрская программа</p>
+  </div>
+
+  <div id="loading-screen" class="loading">Загрузка...</div>
+
+  <!-- Экран входа -->
+  <div id="login-screen">
+    <div class="card">
+      <h2>Вход для блогеров</h2>
+      <input class="input" id="email-input" type="email" placeholder="Email">
+      <input class="input" id="code-input" type="text" placeholder="Ваш промокод (напр. NURLAN)" style="text-transform:uppercase">
+      <button class="btn" onclick="login()">Войти</button>
+      <p id="login-error" class="error"></p>
+    </div>
+    <div class="card" style="text-align:center">
+      <p style="color:rgba(255,255,255,0.3);font-size:13px;line-height:1.6">
+        Хочешь стать партнёром PSY AI?<br>
+        Напиши нам: <a href="mailto:urazymbetov1986@mail.ru" style="color:#C8924A">urazymbetov1986@mail.ru</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Дашборд -->
+  <div id="dashboard-screen">
+    <div class="card">
+      <h2>Твой промокод</h2>
+      <div class="promo-code" id="promo-display"></div>
+    </div>
+    <div class="card">
+      <h2>Статистика</h2>
+      <div class="stat">
+        <span class="stat-label">Активных подписчиков</span>
+        <span class="stat-value green" id="active-count">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Всего пришло</span>
+        <span class="stat-value" id="total-count">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Заработано всего</span>
+        <span class="stat-value gold" id="total-earned">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">К выплате</span>
+        <span class="stat-value gold" id="pending-payout">—</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Последние платежи</h2>
+      <div class="payments" id="payments-list">
+        <p style="color:rgba(255,255,255,0.25);font-size:13px;text-align:center;padding:20px">Платежей пока нет</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Запросить выплату</h2>
+      <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:16px">
+        Минимум $10. Выплата в USDT (TRC-20) в течение 3 рабочих дней.
+      </p>
+      <input class="input" id="wallet-input" type="text" placeholder="USDT кошелёк (TRC-20)">
+      <button class="btn btn-gold" onclick="requestPayout()">Запросить выплату</button>
+      <p id="payout-msg" class="success"></p>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;font-size:13px">Выйти</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://xxqpcptyumqkfjeyqmex.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_XzaDr5Cfc_uWyD4yExby2A_l66JzYgO';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentBlogger = null;
+
+async function init() {
+  const saved = localStorage.getItem('psyai_blogger');
+  if (saved) {
+    currentBlogger = JSON.parse(saved);
+    await showDashboard();
+  } else {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
+  }
+}
+
+async function login() {
+  const email = document.getElementById('email-input').value.trim().toLowerCase();
+  const code = document.getElementById('code-input').value.trim().toUpperCase();
+  if (!email || !code) return;
+
+  const { data, error } = await db
+    .from('bloggers')
+    .select('*')
+    .eq('email', email)
+    .eq('code', code)
+    .single();
+
+  if (error || !data) {
+    document.getElementById('login-error').textContent = 'Email или промокод не найден';
+    return;
+  }
+  currentBlogger = data;
+  localStorage.setItem('psyai_blogger', JSON.stringify(data));
+  await showDashboard();
+}
+
+async function showDashboard() {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard-screen').style.display = 'block';
+
+  document.getElementById('promo-display').textContent = currentBlogger.code;
+
+  // Загружаем свежие данные
+  const { data: blogger } = await db
+    .from('bloggers')
+    .select('*')
+    .eq('id', currentBlogger.id)
+    .single();
+
+  if (blogger) {
+    currentBlogger = blogger;
+    localStorage.setItem('psyai_blogger', JSON.stringify(blogger));
+    document.getElementById('total-earned').textContent = '$' + (blogger.total_earned || 0).toFixed(2);
+    document.getElementById('pending-payout').textContent = '$' + (blogger.pending_payout || 0).toFixed(2);
+    if (blogger.wallet_usdt) document.getElementById('wallet-input').value = blogger.wallet_usdt;
+  }
+
+  // Статистика рефералов
+  const { data: referrals } = await db
+    .from('referrals')
+    .select('status')
+    .eq('blogger_id', currentBlogger.id);
+
+  if (referrals) {
+    document.getElementById('total-count').textContent = referrals.length;
+    document.getElementById('active-count').textContent = referrals.filter(r => r.status === 'active').length;
+  }
+
+  // Последние платежи
+  const { data: payments } = await db
+    .from('payments')
+    .select('amount_usd, commission_usd, plan, created_at')
+    .eq('blogger_id', currentBlogger.id)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  if (payments && payments.length > 0) {
+    const list = payments.map(p => {
+      const date = new Date(p.created_at).toLocaleDateString('ru-RU');
+      const plan = p.plan.includes('annual') ? 'Годовая' : 'Месячная';
+      return `<div class="payment-row">
+        <span style="color:rgba(255,255,255,0.4)">${date} · ${plan}</span>
+        <span style="color:#C8924A">+$${p.commission_usd.toFixed(2)}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('payments-list').innerHTML = list;
+  }
+}
+
+async function requestPayout() {
+  const wallet = document.getElementById('wallet-input').value.trim();
+  const msg = document.getElementById('payout-msg');
+  if (!wallet) { msg.textContent = 'Введи USDT кошелёк'; msg.className = 'error'; return; }
+  if (currentBlogger.pending_payout < 10) {
+    msg.textContent = 'Минимум для выплаты — $10';
+    msg.className = 'error'; return;
+  }
+  await db.from('bloggers').update({ wallet_usdt: wallet }).eq('id', currentBlogger.id);
+  msg.textContent = 'Запрос отправлен! Выплата в течение 3 рабочих дней.';
+  msg.className = 'success';
+}
+
+function logout() {
+  localStorage.removeItem('psyai_blogger');
+  currentBlogger = null;
+  document.getElementById('dashboard-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'block';
+}
+
+init();
+</script>
+</body>
+</html>
