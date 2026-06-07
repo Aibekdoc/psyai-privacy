@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PSY AI Partners</title>
+  <style>
+    :root {
+      --bg: #f4f1ec;
+      --ink: #151719;
+      --muted: rgba(21, 23, 25, 0.62);
+      --line: rgba(21, 23, 25, 0.12);
+      --card: #ffffff;
+      --green: #6f927d;
+      --dark: #111316;
+      --gold: #b88743;
+      --red: #b55757;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 430px;
+    }
+
+    .hero {
+      padding: 52px clamp(24px, 6vw, 86px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 44px;
+      background:
+        linear-gradient(135deg, rgba(111, 146, 125, 0.20), transparent 42%),
+        radial-gradient(circle at 76% 22%, rgba(184, 135, 67, 0.20), transparent 28%),
+        var(--bg);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: var(--dark);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(44px, 7vw, 92px);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 620px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.45;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 880px;
+    }
+
+    .step {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+    }
+
+    .num {
+      color: var(--gold);
+      font-weight: 900;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .panel {
+      background: var(--dark);
+      color: #fff;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .form {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .form h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .form p {
+      margin: 0 0 18px;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    label {
+      display: block;
+      margin: 13px 0 7px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      padding: 14px;
+      font: inherit;
+      outline: none;
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(255, 255, 255, 0.32); }
+    textarea { min-height: 86px; resize: vertical; }
+    select option { color: #111316; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .hidden { display: none; }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: 0.55; cursor: default; }
+
+    .legal {
+      margin-top: 14px;
+      color: rgba(255, 255, 255, 0.38);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .result {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(111, 146, 125, 0.20);
+      border: 1px solid rgba(111, 146, 125, 0.36);
+    }
+
+    .result.active { display: block; }
+    .result h3 { margin: 0 0 10px; font-size: 18px; }
+    .code {
+      display: inline-flex;
+      margin: 4px 0 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--dark);
+      font-size: 24px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+    }
+
+    .story {
+      white-space: pre-wrap;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .copy {
+      margin-top: 8px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .error {
+      display: none;
+      margin-top: 12px;
+      color: #ffd2d2;
+      background: rgba(181, 87, 87, 0.20);
+      border: 1px solid rgba(181, 87, 87, 0.36);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .error.active { display: block; }
+
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .panel { min-height: auto; padding: 18px; }
+      .hero { padding: 34px 22px; }
+      .steps { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="brand"><div class="mark">P</div> PSY AI Partners</div>
+      <div>
+        <h1>Зарабатывай с PSY AI</h1>
+        <p class="lead">
+          Получи личный код приглашения. Твоя аудитория вводит код в приложении,
+          получает бонус XP, а ты получаешь 20% с платных подписок.
+        </p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">01</div>
+          <strong>Заполни форму</strong>
+          <span>Укажи ник, площадку и контакт. Код создается автоматически.</span>
+        </div>
+        <div class="step">
+          <div class="num">02</div>
+          <strong>Опубликуй код</strong>
+          <span>Скопируй готовый текст для сторис, Telegram или Reels.</span>
+        </div>
+        <div class="step">
+          <div class="num">03</div>
+          <strong>Получай выплаты</strong>
+          <span>Мы считаем покупки автоматически. Выплаты после проверки вручную.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <form class="form" id="partnerForm">
+        <h2>Получить мой код</h2>
+        <p>Регистрация занимает меньше минуты. Код можно использовать сразу, выплаты проходят после проверки аккаунта.</p>
+
+        <label for="name">Имя или ник</label>
+        <input id="name" name="name" maxlength="80" placeholder="Например: Aibek AI" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" maxlength="120" placeholder="you@example.com" required />
+
+        <label for="contactUrl">Ссылка на соцсеть или контакт</label>
+        <input id="contactUrl" name="contactUrl" maxlength="180" placeholder="Instagram, TikTok, Telegram, WhatsApp" required />
+
+        <div class="grid">
+          <div>
+            <label for="platform">Площадка</label>
+            <select id="platform" name="platform">
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>YouTube</option>
+              <option>Telegram</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <div>
+            <label for="audienceSize">Аудитория</label>
+            <input id="audienceSize" name="audienceSize" type="number" min="0" placeholder="5000" />
+          </div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label for="desiredCode">Желаемый код</label>
+            <input id="desiredCode" name="desiredCode" maxlength="16" placeholder="AIBEK" />
+          </div>
+          <div>
+            <label for="country">Страна</label>
+            <input id="country" name="country" maxlength="60" placeholder="Kazakhstan" />
+          </div>
+        </div>
+
+        <label for="payoutMethod">Куда делать выплату</label>
+        <input id="payoutMethod" name="payoutMethod" maxlength="80" placeholder="Kaspi / PayPal / USDT / другое" />
+
+        <label for="notes">Коротко об аудитории</label>
+        <textarea id="notes" name="notes" maxlength="500" placeholder="Кому рассказываешь про приложение?"></textarea>
+
+        <input class="hidden" id="website" name="website" autocomplete="off" />
+
+        <button id="submitBtn" type="submit">Получить код</button>
+        <div class="error" id="errorBox"></div>
+
+        <div class="result" id="resultBox">
+          <h3>Готово. Твой код:</h3>
+          <div class="code" id="codeBox"></div>
+          <div class="story" id="storyBox"></div>
+          <button class="copy" type="button" id="copyStoryBtn">Скопировать текст</button>
+        </div>
+
+        <div class="legal">
+          Важно: начисления считаются только с платных подписок пользователей, которые ввели твой код в PSY AI.
+          Выплаты могут быть задержаны при возвратах, подозрительной активности или нарушении правил платформ.
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = 'https://xxqpcptyumqkfjeyqmex.supabase.co';
+    const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/partner-signup`;
+
+    const form = document.getElementById('partnerForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBox = document.getElementById('errorBox');
+    const resultBox = document.getElementById('resultBox');
+    const codeBox = document.getElementById('codeBox');
+    const storyBox = document.getElementById('storyBox');
+    const copyStoryBtn = document.getElementById('copyStoryBtn');
+
+    let lastStory = '';
+
+    function showError(message) {
+      errorBox.textContent = message || 'Регистрация временно недоступна';
+      errorBox.classList.add('active');
+    }
+
+    function clearError() {
+      errorBox.textContent = '';
+      errorBox.classList.remove('active');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearError();
+      resultBox.classList.remove('active');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Создаем код...';
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.audienceSize = Number(data.audienceSize || 0);
+
+      try {
+        const res = await fetch(FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success || !json.code) {
+          throw new Error(json.error || 'Не удалось создать код');
+        }
+
+        lastStory = json.storyText;
+        codeBox.textContent = json.code;
+        storyBox.textContent = json.storyText;
+        resultBox.classList.add('active');
+        submitBtn.textContent = 'Код создан';
+      } catch (error) {
+        showError(error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Получить код';
+      }
+    });
+
+    copyStoryBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(lastStory);
+        copyStoryBtn.textContent = 'Скопировано';
+        setTimeout(() => { copyStoryBtn.textContent = 'Скопировать текст'; }, 1500);
+      } catch {
+        showError('Не удалось скопировать. Выдели текст вручную.');
+      }
+    });
+  </script>
+</body>
+</html>
