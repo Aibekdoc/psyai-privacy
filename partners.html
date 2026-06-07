@@ -53,6 +53,37 @@
       text-transform: uppercase;
     }
 
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .langs {
+      display: flex;
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.38);
+    }
+
+    .lang {
+      width: auto;
+      margin: 0;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .lang.active {
+      background: var(--dark);
+      color: #fff;
+    }
+
     .mark {
       width: 38px;
       height: 38px;
@@ -251,16 +282,24 @@
       .hero { padding: 34px 22px; }
       .steps { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr; }
+      .top { align-items: flex-start; flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <main class="shell">
     <section class="hero">
-      <div class="brand"><div class="mark">P</div> PSY AI Partners</div>
+      <div class="top">
+        <div class="brand"><div class="mark">P</div> PSY AI Partners</div>
+        <div class="langs" aria-label="Language">
+          <button class="lang active" type="button" data-lang="ru">RU</button>
+          <button class="lang" type="button" data-lang="kz">KZ</button>
+          <button class="lang" type="button" data-lang="en">EN</button>
+        </div>
+      </div>
       <div>
-        <h1>Зарабатывай с PSY AI</h1>
-        <p class="lead">
+        <h1 id="heroTitle">Зарабатывай с PSY AI</h1>
+        <p class="lead" id="heroLead">
           Получи личный код приглашения. Твоя аудитория вводит код в приложении,
           получает бонус XP, а ты получаешь 20% с платных подписок.
         </p>
@@ -268,68 +307,68 @@
       <div class="steps">
         <div class="step">
           <div class="num">01</div>
-          <strong>Заполни форму</strong>
-          <span>Укажи ник, площадку и контакт. Код создается автоматически.</span>
+          <strong id="step1Title">Заполни форму</strong>
+          <span id="step1Text">Укажи ник, площадку и контакт. Код создается автоматически.</span>
         </div>
         <div class="step">
           <div class="num">02</div>
-          <strong>Опубликуй код</strong>
-          <span>Скопируй готовый текст для сторис, Telegram или Reels.</span>
+          <strong id="step2Title">Опубликуй код</strong>
+          <span id="step2Text">Скопируй готовый текст для сторис, Telegram или Reels.</span>
         </div>
         <div class="step">
           <div class="num">03</div>
-          <strong>Получай выплаты</strong>
-          <span>Мы считаем покупки автоматически. Выплаты после проверки вручную.</span>
+          <strong id="step3Title">Получай выплаты</strong>
+          <span id="step3Text">Мы считаем покупки автоматически. Выплаты после проверки вручную.</span>
         </div>
       </div>
     </section>
 
     <section class="panel">
       <form class="form" id="partnerForm">
-        <h2>Получить мой код</h2>
-        <p>Регистрация занимает меньше минуты. Код можно использовать сразу, выплаты проходят после проверки аккаунта.</p>
+        <h2 id="formTitle">Получить мой код</h2>
+        <p id="formText">Регистрация занимает меньше минуты. Код можно использовать сразу, выплаты проходят после проверки аккаунта.</p>
 
-        <label for="name">Имя или ник</label>
+        <label for="name" id="nameLabel">Имя или ник</label>
         <input id="name" name="name" maxlength="80" placeholder="Например: Aibek AI" required />
 
-        <label for="email">Email</label>
+        <label for="email" id="emailLabel">Email</label>
         <input id="email" name="email" type="email" maxlength="120" placeholder="you@example.com" required />
 
-        <label for="contactUrl">Ссылка на соцсеть или контакт</label>
+        <label for="contactUrl" id="contactLabel">Ссылка на соцсеть или контакт</label>
         <input id="contactUrl" name="contactUrl" maxlength="180" placeholder="Instagram, TikTok, Telegram, WhatsApp" required />
 
         <div class="grid">
           <div>
-            <label for="platform">Площадка</label>
+            <label for="platform" id="platformLabel">Площадка</label>
             <select id="platform" name="platform">
               <option>Instagram</option>
               <option>TikTok</option>
               <option>YouTube</option>
               <option>Telegram</option>
-              <option>Другое</option>
+              <option id="otherOption">Другое</option>
             </select>
           </div>
           <div>
-            <label for="audienceSize">Аудитория</label>
+            <label for="audienceSize" id="audienceLabel">Аудитория</label>
             <input id="audienceSize" name="audienceSize" type="number" min="0" placeholder="5000" />
           </div>
         </div>
 
         <div class="grid">
           <div>
-            <label for="desiredCode">Желаемый код</label>
+            <label for="desiredCode" id="codeLabel">Желаемый код</label>
             <input id="desiredCode" name="desiredCode" maxlength="16" placeholder="AIBEK" />
           </div>
           <div>
-            <label for="country">Страна</label>
+            <label for="country" id="countryLabel">Страна</label>
             <input id="country" name="country" maxlength="60" placeholder="Kazakhstan" />
           </div>
         </div>
 
-        <label for="payoutMethod">Куда делать выплату</label>
+        <label for="payoutMethod" id="payoutLabel">Куда делать выплату</label>
         <input id="payoutMethod" name="payoutMethod" maxlength="80" placeholder="Kaspi / PayPal / USDT / другое" />
 
-        <label for="notes">Коротко об аудитории</label>
+        <label for="notes" id="notesLabel">Коротко об аудитории</label>
         <textarea id="notes" name="notes" maxlength="500" placeholder="Кому рассказываешь про приложение?"></textarea>
 
         <input class="hidden" id="website" name="website" autocomplete="off" />
@@ -338,13 +377,13 @@
         <div class="error" id="errorBox"></div>
 
         <div class="result" id="resultBox">
-          <h3>Готово. Твой код:</h3>
+          <h3 id="resultTitle">Готово. Твой код:</h3>
           <div class="code" id="codeBox"></div>
           <div class="story" id="storyBox"></div>
           <button class="copy" type="button" id="copyStoryBtn">Скопировать текст</button>
         </div>
 
-        <div class="legal">
+        <div class="legal" id="legalText">
           Важно: начисления считаются только с платных подписок пользователей, которые ввели твой код в PSY AI.
           Выплаты могут быть задержаны при возвратах, подозрительной активности или нарушении правил платформ.
         </div>
@@ -355,6 +394,121 @@
   <script>
     const SUPABASE_URL = 'https://xxqpcptyumqkfjeyqmex.supabase.co';
     const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/partner-signup`;
+    const APP_STORE_URL = 'https://apps.apple.com/app/psy-ai/id6764013324';
+
+    const I18N = {
+      ru: {
+        htmlLang: 'ru',
+        heroTitle: 'Зарабатывай с PSY AI',
+        heroLead: 'Получи личный код приглашения. Твоя аудитория вводит код в приложении, получает бонус XP, а ты получаешь 20% с платных подписок.',
+        step1Title: 'Заполни форму',
+        step1Text: 'Укажи ник, площадку и контакт. Код создается автоматически.',
+        step2Title: 'Опубликуй код',
+        step2Text: 'Скопируй готовый текст для сторис, Telegram или Reels.',
+        step3Title: 'Получай выплаты',
+        step3Text: 'Мы считаем покупки автоматически. Выплаты после проверки вручную.',
+        formTitle: 'Получить мой код',
+        formText: 'Регистрация занимает меньше минуты. Код можно использовать сразу, выплаты проходят после проверки аккаунта.',
+        nameLabel: 'Имя или ник',
+        namePlaceholder: 'Например: Aibek AI',
+        emailLabel: 'Email',
+        contactLabel: 'Ссылка на соцсеть или контакт',
+        platformLabel: 'Площадка',
+        otherOption: 'Другое',
+        audienceLabel: 'Аудитория',
+        codeLabel: 'Желаемый код',
+        countryLabel: 'Страна',
+        payoutLabel: 'Куда делать выплату',
+        payoutPlaceholder: 'Kaspi / PayPal / USDT / другое',
+        notesLabel: 'Коротко об аудитории',
+        notesPlaceholder: 'Кому рассказываешь про приложение?',
+        submit: 'Получить код',
+        loading: 'Создаем код...',
+        created: 'Код создан',
+        resultTitle: 'Готово. Твой код:',
+        copy: 'Скопировать текст',
+        copied: 'Скопировано',
+        copyError: 'Не удалось скопировать. Выдели текст вручную.',
+        defaultError: 'Регистрация временно недоступна',
+        createError: 'Не удалось создать код',
+        legalText: 'Важно: начисления считаются только с платных подписок пользователей, которые ввели твой код в PSY AI. Выплаты могут быть задержаны при возвратах, подозрительной активности или нарушении правил платформ.',
+        story: (code) => `Скачай PSY AI, введи код ${code} при входе и получи бонус XP.\n${APP_STORE_URL}`,
+      },
+      kz: {
+        htmlLang: 'kk',
+        heroTitle: 'PSY AI арқылы табыс тап',
+        heroLead: 'Жеке шақыру кодыңды ал. Аудиторияң қолданбаға код енгізіп, бонус XP алады, ал сен ақылы жазылымдардан 20% аласың.',
+        step1Title: 'Форманы толтыр',
+        step1Text: 'Ник, платформа және байланыс дерегін көрсет. Код автоматты түрде жасалады.',
+        step2Title: 'Кодты жарияла',
+        step2Text: 'Stories, Telegram немесе Reels үшін дайын мәтінді көшір.',
+        step3Title: 'Төлем ал',
+        step3Text: 'Сатып алулар автоматты есептеледі. Төлемдер тексерістен кейін қолмен жасалады.',
+        formTitle: 'Менің кодымды алу',
+        formText: 'Тіркелу бір минуттан аз уақыт алады. Кодты бірден қолдануға болады, төлемдер аккаунт тексерілгеннен кейін жасалады.',
+        nameLabel: 'Аты немесе ник',
+        namePlaceholder: 'Мысалы: Aibek AI',
+        emailLabel: 'Email',
+        contactLabel: 'Әлеуметтік желі немесе байланыс',
+        platformLabel: 'Платформа',
+        otherOption: 'Басқа',
+        audienceLabel: 'Аудитория',
+        codeLabel: 'Қалаған код',
+        countryLabel: 'Ел',
+        payoutLabel: 'Төлемді қайда жібереміз',
+        payoutPlaceholder: 'Kaspi / PayPal / USDT / басқа',
+        notesLabel: 'Аудитория туралы қысқаша',
+        notesPlaceholder: 'Қолданба туралы кімге айтасың?',
+        submit: 'Код алу',
+        loading: 'Код жасалуда...',
+        created: 'Код жасалды',
+        resultTitle: 'Дайын. Сенің кодың:',
+        copy: 'Мәтінді көшіру',
+        copied: 'Көшірілді',
+        copyError: 'Көшіру мүмкін болмады. Мәтінді қолмен белгіле.',
+        defaultError: 'Тіркелу уақытша қолжетімсіз',
+        createError: 'Код жасау мүмкін болмады',
+        legalText: 'Маңызды: начисления тек PSY AI ішінде сенің кодыңды енгізген қолданушылардың ақылы жазылымдарынан есептеледі. Қайтарым, күмәнді белсенділік немесе платформа ережелерін бұзу кезінде төлем кешігуі мүмкін.',
+        story: (code) => `PSY AI жүктеп ал, кіргенде ${code} кодын енгіз де, бонус XP ал.\n${APP_STORE_URL}`,
+      },
+      en: {
+        htmlLang: 'en',
+        heroTitle: 'Earn with PSY AI',
+        heroLead: 'Get your personal invitation code. Your audience enters the code in the app, receives bonus XP, and you earn 20% from paid subscriptions.',
+        step1Title: 'Fill the form',
+        step1Text: 'Add your name, platform, and contact. Your code is created automatically.',
+        step2Title: 'Share your code',
+        step2Text: 'Copy the ready-made text for stories, Telegram, or Reels.',
+        step3Title: 'Get payouts',
+        step3Text: 'Purchases are tracked automatically. Payouts are made manually after review.',
+        formTitle: 'Get my code',
+        formText: 'Registration takes less than a minute. You can use the code right away; payouts are released after account review.',
+        nameLabel: 'Name or nickname',
+        namePlaceholder: 'e.g. Aibek AI',
+        emailLabel: 'Email',
+        contactLabel: 'Social link or contact',
+        platformLabel: 'Platform',
+        otherOption: 'Other',
+        audienceLabel: 'Audience',
+        codeLabel: 'Preferred code',
+        countryLabel: 'Country',
+        payoutLabel: 'Payout method',
+        payoutPlaceholder: 'PayPal / USDT / bank / other',
+        notesLabel: 'Short audience note',
+        notesPlaceholder: 'Who will you tell about the app?',
+        submit: 'Get code',
+        loading: 'Creating code...',
+        created: 'Code created',
+        resultTitle: 'Done. Your code:',
+        copy: 'Copy text',
+        copied: 'Copied',
+        copyError: 'Could not copy. Please select the text manually.',
+        defaultError: 'Registration is temporarily unavailable',
+        createError: 'Could not create code',
+        legalText: 'Important: earnings are counted only from paid subscriptions of users who entered your code in PSY AI. Payouts may be delayed in case of refunds, suspicious activity, or platform policy violations.',
+        story: (code) => `Download PSY AI, enter code ${code} when you start, and get bonus XP.\n${APP_STORE_URL}`,
+      },
+    };
 
     const form = document.getElementById('partnerForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -363,11 +517,51 @@
     const codeBox = document.getElementById('codeBox');
     const storyBox = document.getElementById('storyBox');
     const copyStoryBtn = document.getElementById('copyStoryBtn');
+    const langButtons = document.querySelectorAll('[data-lang]');
 
     let lastStory = '';
+    let currentLang = localStorage.getItem('psyai_partner_lang') || 'ru';
+
+    function t() {
+      return I18N[currentLang] || I18N.ru;
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setPlaceholder(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.placeholder = value;
+    }
+
+    function applyLanguage(lang) {
+      currentLang = I18N[lang] ? lang : 'ru';
+      localStorage.setItem('psyai_partner_lang', currentLang);
+      document.documentElement.lang = t().htmlLang;
+      langButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.lang === currentLang));
+
+      [
+        'heroTitle', 'heroLead', 'step1Title', 'step1Text', 'step2Title', 'step2Text',
+        'step3Title', 'step3Text', 'formTitle', 'formText', 'nameLabel', 'emailLabel',
+        'contactLabel', 'platformLabel', 'otherOption', 'audienceLabel', 'codeLabel',
+        'countryLabel', 'payoutLabel', 'notesLabel', 'resultTitle', 'legalText'
+      ].forEach((id) => setText(id, t()[id]));
+
+      setPlaceholder('name', t().namePlaceholder);
+      setPlaceholder('payoutMethod', t().payoutPlaceholder);
+      setPlaceholder('notes', t().notesPlaceholder);
+      submitBtn.textContent = resultBox.classList.contains('active') ? t().created : t().submit;
+      copyStoryBtn.textContent = t().copy;
+      if (codeBox.textContent) {
+        lastStory = t().story(codeBox.textContent);
+        storyBox.textContent = lastStory;
+      }
+    }
 
     function showError(message) {
-      errorBox.textContent = message || 'Регистрация временно недоступна';
+      errorBox.textContent = message || t().defaultError;
       errorBox.classList.add('active');
     }
 
@@ -381,7 +575,7 @@
       clearError();
       resultBox.classList.remove('active');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Создаем код...';
+      submitBtn.textContent = t().loading;
 
       const data = Object.fromEntries(new FormData(form).entries());
       data.audienceSize = Number(data.audienceSize || 0);
@@ -394,30 +588,36 @@
         });
         const json = await res.json();
         if (!res.ok || !json.success || !json.code) {
-          throw new Error(json.error || 'Не удалось создать код');
+          throw new Error(json.error || t().createError);
         }
 
-        lastStory = json.storyText;
+        lastStory = t().story(json.code);
         codeBox.textContent = json.code;
-        storyBox.textContent = json.storyText;
+        storyBox.textContent = lastStory;
         resultBox.classList.add('active');
-        submitBtn.textContent = 'Код создан';
+        submitBtn.textContent = t().created;
       } catch (error) {
         showError(error.message);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Получить код';
+        submitBtn.textContent = t().submit;
       }
     });
 
     copyStoryBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(lastStory);
-        copyStoryBtn.textContent = 'Скопировано';
-        setTimeout(() => { copyStoryBtn.textContent = 'Скопировать текст'; }, 1500);
+        copyStoryBtn.textContent = t().copied;
+        setTimeout(() => { copyStoryBtn.textContent = t().copy; }, 1500);
       } catch {
-        showError('Не удалось скопировать. Выдели текст вручную.');
+        showError(t().copyError);
       }
     });
+
+    langButtons.forEach((button) => {
+      button.addEventListener('click', () => applyLanguage(button.dataset.lang));
+    });
+
+    applyLanguage(currentLang);
   </script>
 </body>
 </html>
